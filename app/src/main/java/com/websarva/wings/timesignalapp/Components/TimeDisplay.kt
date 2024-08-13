@@ -16,12 +16,64 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import com.websarva.wings.timesignalapp.Functions.TextDisplay
 import com.websarva.wings.timesignalapp.Functions.playSound
 import com.websarva.wings.timesignalapp.R
 import kotlinx.coroutines.delay
 import java.util.Calendar
 
+@Composable
+fun TimeDisplay(context: Context, density: Density) {
+    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.testsound) } //音声ファイルのインスタンス作成
+
+    val calendar = Calendar.getInstance()
+    var hour by remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY).toString()) }
+    var min by remember { mutableStateOf(calendar.get(Calendar.MINUTE).toString()) }
+    var second by remember { mutableStateOf(calendar.get(Calendar.SECOND).toString()) }
+    LaunchedEffect(true) {
+        while (true) {
+            // 音を再生
+            if (!mediaPlayer.isPlaying) {
+                mediaPlayer.start()
+            }
+
+            // 1秒ごとに実行する
+            delay(1000)
+
+            val calendar = Calendar.getInstance()
+            // 時間(hh)
+            hour = zeroFillFormat(
+                changeTimeTable(
+                    calendar.get(Calendar.AM_PM),
+                    calendar.get(Calendar.HOUR_OF_DAY)
+                )
+            )
+            // 時間(mm)
+            min = zeroFillFormat(calendar.get(Calendar.MINUTE).toString())
+            // 時間(ss)
+            second = zeroFillFormat(calendar.get(Calendar.SECOND).toString())
+        }
+    }
+    // レイアウト
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        TextDisplay(text = hour, fontSize = 100, density = density)
+        TextDisplay(text = ":", fontSize = 100, density = density)
+        TextDisplay(text = min, fontSize = 100, density = density)
+        TextDisplay(text = ":", fontSize = 100, density = density)
+        TextDisplay(text = second, fontSize = 100, density = density)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.release()
+        }
+    }
+}
 
 private enum class TimeTable(val id: Int) {
     AM(0),
@@ -63,56 +115,4 @@ private fun changeTimeTable(am_pm: Int, hour: Int): String {
         }
     }
     return hour.toString()
-}
-
-@Composable
-fun TimeDisplay(context: Context) {
-    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.testsound) } //音声ファイルのインスタンス作成
-
-    val calendar = Calendar.getInstance()
-    var hour by remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY).toString()) }
-    var min by remember { mutableStateOf(calendar.get(Calendar.MINUTE).toString()) }
-    var second by remember { mutableStateOf(calendar.get(Calendar.SECOND).toString()) }
-    LaunchedEffect(true) {
-        while (true) {
-            // 音を再生
-            if (!mediaPlayer.isPlaying) {
-                mediaPlayer.start()
-            }
-
-            // 1秒ごとに実行する
-            delay(1000)
-
-            val calendar = Calendar.getInstance()
-            // 時間(hh)
-            hour = zeroFillFormat(
-                changeTimeTable(
-                    calendar.get(Calendar.AM_PM),
-                    calendar.get(Calendar.HOUR_OF_DAY)
-                )
-            )
-            // 時間(mm)
-            min = zeroFillFormat(calendar.get(Calendar.MINUTE).toString())
-            // 時間(ss)
-            second = zeroFillFormat(calendar.get(Calendar.SECOND).toString())
-        }
-    }
-    val density = LocalDensity.current
-    // レイアウト
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(text = hour, fontSize = with(density) { 60.dp.toSp() }, fontWeight = FontWeight.Bold, color = Color.Blue)
-        Text(text = " : ", fontSize = with(density) { 60.dp.toSp() }, fontWeight = FontWeight.Bold,color = Color.Blue)
-        Text(text = min, fontSize = with(density) { 60.dp.toSp() }, fontWeight = FontWeight.Bold, color = Color.Blue)
-        Text(text = " : ", fontSize = with(density) { 60.dp.toSp() }, fontWeight = FontWeight.Bold, color = Color.Blue)
-        Text(text = second, fontSize = with(density) { 60.dp.toSp() }, fontWeight = FontWeight.Bold, color = Color.Blue)
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            mediaPlayer.release()
-        }
-    }
 }
