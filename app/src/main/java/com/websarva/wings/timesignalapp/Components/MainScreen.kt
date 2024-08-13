@@ -3,6 +3,7 @@ package com.websarva.wings.timesignalapp.Components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -17,17 +18,10 @@ import com.websarva.wings.timesignalapp.Functions.playSound
 fun MainScreen() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp)
+        modifier = Modifier
+            .padding(top = 50.dp, start = 20.dp, end = 20.dp)
     ) {
         val context = LocalContext.current
-        Button(
-            onClick = { playSound(context) }
-        ) {
-            Text(text = "音を鳴らす")
-        }
-
-        Spacer(modifier = Modifier.padding(20.dp))
-
         TimeDisplay(context)
     }
 
