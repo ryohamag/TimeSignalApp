@@ -1,7 +1,9 @@
 package com.websarva.wings.timesignalapp.Components
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.SoundPool
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
@@ -21,7 +23,25 @@ import java.util.Calendar
 
 @Composable
 fun TimeDisplay(context: Context, density: Density) {
-    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.testsound) } //音声ファイルのインスタンス作成
+
+    val audioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_ALARM)
+        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+        .build()
+
+    val soundpool = SoundPool.Builder()
+        .setAudioAttributes(audioAttributes)
+        .setMaxStreams(4)
+        .build()
+
+    //クリック音のロード
+    val clickSound = soundpool.load(context, R.raw.testsound, 1)
+
+    //3秒カウント
+    val count3Sound = soundpool.load(context, R.raw.count3, 1)
+
+    //10秒カウント
+    val count10s = soundpool.load(context, R.raw.count10s, 1)
 
     val calendar = Calendar.getInstance()
     var hour by remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY).toString()) }
@@ -30,10 +50,7 @@ fun TimeDisplay(context: Context, density: Density) {
 
     LaunchedEffect(true) {
         while (true) {
-            // 音を再生
-            if (!mediaPlayer.isPlaying) {
-                mediaPlayer.start()
-            }
+            soundpool.play(clickSound, 0.2f, 0.2f, 0, 0, 1.0f)
 
             // 1秒ごとに実行する
             delay(1000)
@@ -53,11 +70,23 @@ fun TimeDisplay(context: Context, density: Density) {
                     calendar.get(Calendar.AM_PM),
                     calendar.get(Calendar.HOUR),
                     calendar.get(Calendar.MINUTE),
-                    calendar.get(Calendar.SECOND)
+                    calendar.get(Calendar.SECOND),
+                    soundpool
                 )
+            }
+
+            //10秒ごとのカウント
+            if (calendar.get(Calendar.SECOND) == 10 || calendar.get(Calendar.SECOND) == 20 || calendar.get(Calendar.SECOND) == 40 || calendar.get(Calendar.SECOND) == 50) {
+                soundpool.play(count10s, 0.2f, 0.2f, 0, 0, 1.0f)
+            }
+
+            //30,60秒前のカウント
+            if (calendar.get(Calendar.SECOND) == 26 || calendar.get(Calendar.SECOND) == 56) {
+                soundpool.play(count3Sound, 0.2f, 0.2f, 0, 0, 1.0f)
             }
         }
     }
+
     // レイアウト
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -70,11 +99,6 @@ fun TimeDisplay(context: Context, density: Density) {
         TextDisplay(text = second, fontSize = 100, density = density)
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            mediaPlayer.release()
-        }
-    }
 }
 
 /**
@@ -85,4 +109,3 @@ fun TimeDisplay(context: Context, density: Density) {
 private fun zeroFillFormat(time: String): String {
     return time.padStart(2, '0')
 }
-
