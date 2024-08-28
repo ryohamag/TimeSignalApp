@@ -123,11 +123,11 @@ fun TimeDisplay(context: Context, density: Density, viewModel: ViewModels) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        TextDisplay(text = hour, fontSize = 100, density = density)
-        TextDisplay(text = ":", fontSize = 100, density = density)
-        TextDisplay(text = min, fontSize = 100, density = density)
-        TextDisplay(text = ":", fontSize = 100, density = density)
-        TextDisplay(text = second, fontSize = 100, density = density)
+        TextDisplay(text = hour, fontSize = 100, density = density, viewModel)
+        TextDisplay(text = ":", fontSize = 100, density = density, viewModel)
+        TextDisplay(text = min, fontSize = 100, density = density, viewModel)
+        TextDisplay(text = ":", fontSize = 100, density = density, viewModel)
+        TextDisplay(text = second, fontSize = 100, density = density, viewModel)
     }
 }
 

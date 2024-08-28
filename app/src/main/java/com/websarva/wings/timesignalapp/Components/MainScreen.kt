@@ -64,11 +64,14 @@ fun MainScreen(
                                 CharacterMenu(viewModel)
                             }
                         }
-                        IconButton(onClick = { /* do something */ }) {
+                        IconButton(onClick = { viewModel.colorMenuExpanded = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_palette_24),
                                 contentDescription = "文字色の設定",
                             )
+                            if (viewModel.colorMenuExpanded) {
+                                ColorMenu(viewModel)
+                            }
                         }
                         IconButton(onClick = { /* do something */ }) {
                             Icon(
@@ -91,7 +94,7 @@ fun MainScreen(
             val context = LocalContext.current
             val density = LocalDensity.current
 
-            DateDisplay(density)
+            DateDisplay(density, viewModel)
 
             Spacer(modifier = Modifier.height(20.dp))
 

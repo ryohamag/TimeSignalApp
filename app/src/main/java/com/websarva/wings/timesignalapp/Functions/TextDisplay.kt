@@ -6,13 +6,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import com.websarva.wings.timesignalapp.ViewModels
 
 @Composable
-fun TextDisplay(text: String, fontSize: Int, density: Density) {
+fun TextDisplay(text: String, fontSize: Int, density: Density, viewModel: ViewModels) {
     Text(
         text = text,
         fontSize = with(density) { fontSize.dp.toSp() },
         fontWeight = FontWeight.Bold,
-        color = Color.Black
+        color = viewModel.selectedColor,
     )
 }
