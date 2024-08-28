@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,7 +37,7 @@ fun TimeDisplay(context: Context, density: Density, viewModel: ViewModels) {
             .build()
     }
 
-    var clickSound by remember { mutableStateOf(0) }
+    var clickSound by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(viewModel.selectedClickSound) {
         // クリック音のロード
@@ -66,10 +67,10 @@ fun TimeDisplay(context: Context, density: Density, viewModel: ViewModels) {
     }
 
     //3秒カウント
-    val count3Sound = remember { mutableStateOf(soundpool.load(context, R.raw.count3, 1)) }
+    val count3Sound = remember { mutableIntStateOf(soundpool.load(context, R.raw.count3, 1)) }
 
     //10秒カウント
-    val count10s = remember { mutableStateOf(soundpool.load(context, R.raw.count10s, 1)) }
+    val count10s = remember { mutableIntStateOf(soundpool.load(context, R.raw.count10s, 1)) }
 
     val calendar = Calendar.getInstance()
     var hour by remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY).toString()) }
@@ -108,12 +109,12 @@ fun TimeDisplay(context: Context, density: Density, viewModel: ViewModels) {
 
             //10秒ごとのカウント
             if (current.get(Calendar.SECOND) == 10 || current.get(Calendar.SECOND) == 20 || current.get(Calendar.SECOND) == 40 || current.get(Calendar.SECOND) == 50) {
-                soundpool.play(count10s.value, 0.2f, 0.2f, 0, 0, 1.0f)
+                soundpool.play(count10s.intValue, 0.2f, 0.2f, 0, 0, 1.0f)
             }
 
             //30,60秒前のカウント
             if (current.get(Calendar.SECOND) == 26 || current.get(Calendar.SECOND) == 56) {
-                soundpool.play(count3Sound.value, 0.2f, 0.2f, 0, 0, 1.0f)
+                soundpool.play(count3Sound.intValue, 0.2f, 0.2f, 0, 0, 1.0f)
             }
         }
     }
