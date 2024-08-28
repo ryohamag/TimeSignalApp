@@ -21,111 +21,6 @@ import com.websarva.wings.timesignalapp.ViewModels
 import kotlinx.coroutines.delay
 import java.util.Calendar
 
-//@Composable
-//fun TimeDisplay(context: Context, density: Density, viewModel: ViewModels) {
-//
-//    val audioAttributes = AudioAttributes.Builder()
-//        .setUsage(AudioAttributes.USAGE_ALARM)
-//        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//        .build()
-//
-//    val soundpool = SoundPool.Builder()
-//        .setAudioAttributes(audioAttributes)
-//        .setMaxStreams(4)
-//        .build()
-//
-//    LaunchedEffect(viewModel.selectedClickSound) {
-//        // クリック音のロード
-//        viewModel.clickSound = when (viewModel.selectedClickSound) {
-//        1 -> soundpool.load(context, R.raw.clicksound1, 1)
-//        2 -> soundpool.load(context, R.raw.clicksound2, 1)
-//        3 -> soundpool.load(context, R.raw.clicksound3, 1)
-//        4 -> soundpool.load(context, R.raw.clicksound4, 1)
-//        5 -> soundpool.load(context, R.raw.clicksound5, 1)
-//        6 -> soundpool.load(context, R.raw.clicksound6, 1)
-//        7 -> soundpool.load(context, R.raw.clicksound7, 1)
-//        8 -> soundpool.load(context, R.raw.clicksound8, 1)
-//        9 -> soundpool.load(context, R.raw.clicksound9, 1)
-//        10 -> soundpool.load(context, R.raw.clicksound10, 1)
-//        else -> soundpool.load(context, R.raw.clicksound1, 1)
-//        }
-//        Log.d("clicksound", "clickSound: ${viewModel.clickSound}")
-//        Log.d("selectedClicksound", "selectedClickSound: ${viewModel.selectedClickSound}")
-//    }
-//
-//    //3秒カウント
-//    val count3Sound = soundpool.load(context, R.raw.count3, 1)
-//
-//    //10秒カウント
-//    val count10s = soundpool.load(context, R.raw.count10s, 1)
-//
-//    val calendar = Calendar.getInstance()
-//    var hour by remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY).toString()) }
-//    var min by remember { mutableStateOf(calendar.get(Calendar.MINUTE).toString()) }
-//    var second by remember { mutableStateOf(calendar.get(Calendar.SECOND).toString()) }
-//
-//    LaunchedEffect(Unit) {
-//        while (true) {
-//            soundpool.play(viewModel.clickSound, 0.2f, 0.2f, 0, 0, 1.0f)
-//
-//            // 1秒ごとに実行する
-//            delay(1000)
-//
-//            val current = Calendar.getInstance()
-//            // 時間(hh)
-//            hour = zeroFillFormat(current.get(Calendar.HOUR_OF_DAY).toString())
-//            // 時間(mm)
-//            min = zeroFillFormat(current.get(Calendar.MINUTE).toString())
-//            // 時間(ss)
-//            second = zeroFillFormat(current.get(Calendar.SECOND).toString())
-//
-//            // 10秒ごとにreadTimeを呼び出す
-//            if (current.get(Calendar.SECOND) % 10 == 1) {
-//                readTime(
-//                    context,
-//                    current.get(Calendar.AM_PM),
-//                    current.get(Calendar.HOUR),
-//                    current.get(Calendar.MINUTE),
-//                    current.get(Calendar.SECOND),
-//                    soundpool
-//                )
-//            }
-//
-//            //10秒ごとのカウント
-//            if (current.get(Calendar.SECOND) == 10 || current.get(Calendar.SECOND) == 20 || current.get(Calendar.SECOND) == 40 || current.get(Calendar.SECOND) == 50) {
-//                soundpool.play(count10s, 0.2f, 0.2f, 0, 0, 1.0f)
-//            }
-//
-//            //30,60秒前のカウント
-//            if (current.get(Calendar.SECOND) == 26 || current.get(Calendar.SECOND) == 56) {
-//                soundpool.play(count3Sound, 0.2f, 0.2f, 0, 0, 1.0f)
-//            }
-//        }
-//    }
-//
-//    // レイアウト
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.Center
-//    ) {
-//        TextDisplay(text = hour, fontSize = 100, density = density)
-//        TextDisplay(text = ":", fontSize = 100, density = density)
-//        TextDisplay(text = min, fontSize = 100, density = density)
-//        TextDisplay(text = ":", fontSize = 100, density = density)
-//        TextDisplay(text = second, fontSize = 100, density = density)
-//    }
-//
-//}
-//
-///**
-// * １桁だった場合頭に0を追加する
-// *
-// * @param time 時間
-// */
-//private fun zeroFillFormat(time: String): String {
-//    return time.padStart(2, '0')
-//}
-
 @Composable
 fun TimeDisplay(context: Context, density: Density, viewModel: ViewModels) {
 
@@ -206,7 +101,8 @@ fun TimeDisplay(context: Context, density: Density, viewModel: ViewModels) {
                     current.get(Calendar.HOUR),
                     current.get(Calendar.MINUTE),
                     current.get(Calendar.SECOND),
-                    soundpool
+                    soundpool,
+                    viewModel
                 )
             }
 

@@ -13,6 +13,6 @@ fun TextDisplay(text: String, fontSize: Int, density: Density) {
         text = text,
         fontSize = with(density) { fontSize.dp.toSp() },
         fontWeight = FontWeight.Bold,
-        color = Color.Blue
+        color = Color.Black
     )
 }

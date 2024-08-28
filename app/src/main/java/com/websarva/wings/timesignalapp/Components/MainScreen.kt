@@ -55,11 +55,14 @@ fun MainScreen(
                                 ClicksoundMenu(viewModel)
                             }
                         }
-                        IconButton(onClick = { /* do something */ }) {
+                        IconButton(onClick = { viewModel.characterMenuExpanded = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_voice_selection_24),
                                 contentDescription = "ナレーターの設定",
                             )
+                            if (viewModel.characterMenuExpanded) {
+                                CharacterMenu(viewModel)
+                            }
                         }
                         IconButton(onClick = { /* do something */ }) {
                             Icon(
