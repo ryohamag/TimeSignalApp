@@ -193,13 +193,35 @@ fun readTime(
     soundIdsToLoad.forEach { soundPool.load(context, it, 1) }
 }
 
+//private fun playSoundsSequentially(soundPool: SoundPool, soundIds: List<Int>, soundDurations: List<Int>) {
+//    var currentIndex = 0
+//
+//    fun playNext() {
+//        if (currentIndex < soundIds.size) {
+//            val duration = soundDurations[currentIndex]
+//            Log.d("SoundSequence", "Playing sound at index: $currentIndex, soundId: ${soundIds[currentIndex]}")
+//            soundPool.play(soundIds[currentIndex], 0.2f, 0.2f, 0, 0, 1.0f)
+//            currentIndex++
+//            Handler(Looper.getMainLooper()).postDelayed({ playNext() }, duration.toLong())
+//        }
+//    }
+//
+//    playNext()
+//}
+
 private fun playSoundsSequentially(soundPool: SoundPool, soundIds: List<Int>, soundDurations: List<Int>) {
+    // soundIdsとsoundDurationsをsoundIdsの順にソートする
+    val sortedPairs = soundIds.zip(soundDurations).sortedBy { it.first }
+    val sortedSoundIds = sortedPairs.map { it.first }
+    val sortedSoundDurations = sortedPairs.map { it.second }
+
     var currentIndex = 0
 
     fun playNext() {
-        if (currentIndex < soundIds.size) {
-            val duration = soundDurations[currentIndex]
-            soundPool.play(soundIds[currentIndex], 0.2f, 0.2f, 0, 0, 1.0f)
+        if (currentIndex < sortedSoundIds.size) {
+            val duration = sortedSoundDurations[currentIndex]
+            Log.d("SoundSequence", "Playing sound at index: $currentIndex, soundId: ${sortedSoundIds[currentIndex]}")
+            soundPool.play(sortedSoundIds[currentIndex], 0.2f, 0.2f, 0, 0, 1.0f)
             currentIndex++
             Handler(Looper.getMainLooper()).postDelayed({ playNext() }, duration.toLong())
         }
